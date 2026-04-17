@@ -26,6 +26,80 @@ This project allows users to add schools and fetch a list of schools sorted by p
 ## Project Setup
 
 ### 1. Clone the repository
-```bash
-git clone <your-repo-link>
+To clone this repo use link below : 
+git clone <http://github.com/rohanasawale234/School-API>
 cd school-api
+
+### 2. Install dependencies
+
+To install depedencies use this command : npm install
+
+### 3. Setup MySQL Database
+
+CREATE DATABASE school_db;
+
+USE school_db;
+
+CREATE TABLE schools (
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+address VARCHAR(255) NOT NULL,
+latitude FLOAT NOT NULL,
+longitude FLOAT NOT NULL
+);
+
+
+## Configure Database
+
+Update your DB credentials in config/db.js:
+
+host: "localhost",
+user: "root",
+password: "your_password",
+database: "school_db"
+
+## Run the server
+use this command to run the server : node app.js
+
+Server will run on: http://localhost:3000
+
+
+## API Endpoints
+### Add School
+URL: /addSchool
+Method: POST
+Request Body:
+{
+  "name": "ABC School",
+  "address": "Mumbai",
+  "latitude": 19.0760,
+  "longitude": 72.8777
+}
+Response:
+{
+  "message": "School added successfully"
+}
+
+### List Schools
+URL: /listSchools
+Method: GET
+Example:
+/listSchools?latitude=19.07&longitude=72.87
+Response:
+[
+  {
+    "id": 1,
+    "name": "ABC School",
+    "address": "Mumbai",
+    "latitude": 19.076,
+    "longitude": 72.8777,
+    "distance": 1.04
+  }
+]
+
+## Deployment
+not deployed yet
+
+
+## Author
+Rohan Asawale

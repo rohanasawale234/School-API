@@ -116,7 +116,7 @@ Response:
 
 ## Deployment
 
-not deployed yet
+https://school-api-yfeu.onrender.com/
 
 ## Author
 

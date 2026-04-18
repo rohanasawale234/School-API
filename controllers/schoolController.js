@@ -7,21 +7,18 @@ exports.addSchool = (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  db.run(
-    "INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)",
-    [name, address, latitude, longitude],
-    function (err) {
-      if (err) {
-        return res.status(500).json({ error: err });
-      }
+  try {
+    db.prepare(
+      "INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)"
+    ).run(name, address, latitude, longitude);
 
-      res.json({ message: "School added successfully" });
-    }
-  );
+    res.json({ message: "School added successfully" }); // ✅ IMPORTANT
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-// Calculating Distanc here
-
+// Distance function
 function calculateDistance(lat1, long1, lat2, long2) {
   const R = 6371;
 
@@ -40,8 +37,7 @@ function calculateDistance(lat1, long1, lat2, long2) {
   return R * c;
 }
 
-// School List
-
+// List Schools
 exports.listSchools = (req, res) => {
   const { latitude, longitude } = req.query;
 
@@ -49,17 +45,15 @@ exports.listSchools = (req, res) => {
     return res.status(400).json({ message: "Location Required" });
   }
 
-  db.all("SELECT * FROM schools", [], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err });
-    }
+  try {
+    const results = db.prepare("SELECT * FROM schools").all();
 
     const schoolWDistance = results.map((school) => {
       const distance = calculateDistance(
         parseFloat(latitude),
         parseFloat(longitude),
         school.latitude,
-        school.longitude,
+        school.longitude
       );
 
       return { ...school, distance };
@@ -68,5 +62,7 @@ exports.listSchools = (req, res) => {
     schoolWDistance.sort((a, b) => a.distance - b.distance);
 
     res.json(schoolWDistance);
-  });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };

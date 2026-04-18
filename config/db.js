@@ -1,17 +1,16 @@
-const sqlite3 = require("sqlite3").verbose();
+const Database = require("better-sqlite3");
 
-const db = new sqlite3.Database("./schools.db");
+const db = new Database("schools.db");
 
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS schools (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      address TEXT,
-      latitude REAL,
-      longitude REAL
-    )
-  `);
-});
+// Create table if not exists
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS schools (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    address TEXT,
+    latitude REAL,
+    longitude REAL
+  )
+`).run();
 
 module.exports = db;

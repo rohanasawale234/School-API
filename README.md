@@ -116,7 +116,7 @@ Response:
 
 ## Deployment
 
-```https://school-api-yfeu.onrender.com/```
+https://school-api-yfeu.onrender.com/
 
 ## Author
 

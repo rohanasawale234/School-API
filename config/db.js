@@ -1,18 +1,17 @@
-const mysql = require("mysql2")
+const sqlite3 = require("sqlite3").verbose();
 
-const db = mysql.createConnection({
-    host : "localhost",
-    user : "root",
-    password : "rohan007",
-    database : "school_api",
-})
+const db = new sqlite3.Database("./schools.db");
 
-db.connect((err) => {
-    if(err){
-        console.log("DB connection failed: ", err)
-    } else {
-        console.log("Connected to MySql")
-    }
-})
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS schools (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      address TEXT,
+      latitude REAL,
+      longitude REAL
+    )
+  `);
+});
 
 module.exports = db;

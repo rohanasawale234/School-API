@@ -7,15 +7,17 @@ exports.addSchool = (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const sql =
-    "INSERT INTO schools (name, address, latitude, longitude) VALUES ( ?, ?, ?, ?)";
-  db.query(sql, [name, address, latitude, longitude], (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: err });
-    }
+  db.run(
+    "INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)",
+    [name, address, latitude, longitude],
+    function (err) {
+      if (err) {
+        return res.status(500).json({ error: err });
+      }
 
-    res.json({ message: "School added successfully" });
-  });
+      res.json({ message: "School added successfully" });
+    }
+  );
 };
 
 // Calculating Distanc here
@@ -47,7 +49,7 @@ exports.listSchools = (req, res) => {
     return res.status(400).json({ message: "Location Required" });
   }
 
-  db.query("SELECT * FROM schools", (err, results) => {
+  db.all("SELECT * FROM schools", [], (err, results) => {
     if (err) {
       return res.status(500).json({ error: err });
     }
